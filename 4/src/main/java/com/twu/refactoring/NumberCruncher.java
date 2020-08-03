@@ -7,35 +7,35 @@ public class NumberCruncher {
         this.numbers = numbers;
     }
 
+
     public int countEven() {
-        int count = 0;
-        for (int number : numbers) {
-            if (number % 2 == 0) count++;
-        }
-        return count;
+        countEveryType("even");
     }
 
     public int countOdd() {
-        int count = 0;
-        for (int number : numbers) {
-            if (number % 2 == 1) count++;
-        }
-        return count;
+        countEveryType("odd");
     }
 
     public int countPositive() {
-        int count = 0;
-        for (int number : numbers) {
-            if (number >= 0) count++;
-        }
-        return count;
+        countEveryType("positive");
     }
 
     public int countNegative() {
+        countEveryType("negative");
+    }
+
+    public void countEveryType(String type){
         int count = 0;
         for (int number : numbers) {
-            if (number < 0) count++;
+            if(number % 2 == 0 && type.equals("even")){
+                count++;
+            }else if (number % 2 == 1 && type.equals("odd")){
+                count++;
+            }else if(number >= 0 && type.equals("positive")){
+                count++;
+            }else if(number < 0 && type.equals("negative")){
+                count++;
+            }
         }
-        return count;
     }
 }
