@@ -1,16 +1,18 @@
 package com.twu.refactoring;
 
 public class Receipt {
-    private static final int FIXED_CHARGE = 50;
-    private static final double PEAK_TIME_MULTIPLIER = 1.2;
-    private static final double OFF_PEAK_MULTIPLIER = 1.0;
-    private static final int RATE_CHANGE_DISTANCE = 10;
-    private static final int PRE_RATE_CHANGE_NON_AC_RATE = 15;
-    private static final int POST_RATE_CHANGE_NON_AC_RATE = 12;
-    private static final int PRE_RATE_CHANGE_AC_RATE = 20;
-    private static final int POST_RATE_CHANGE_AC_RATE = 17;
-    private static final double SALES_TAX_RATE = 0.1;
+    private static final int fixedCharge = 50;
+    private static final double peakTimeMultplier = 1.2;
+    private static final double peakMultiplier = 1.0;
+    private static final int rateChangeDistance = 10;
+    private static final int preRateChangeNonAc = 15;
+    private static final int postRateChangeNonAc = 12;
+    private static final int preRateChangeAc = 20;
+    private static final int postRateChangeAc = 17;
+    private static final double taxRate = 0.1;
 
+    private static final double distanceMin = Math.min(rateChangeDistance, totalKms);
+    private static final double distanceMax = Math.max(0, totalKms - rateChangeDistance);
     private final Taxi taxi;
 
     public Receipt(Taxi taxi) {
@@ -21,19 +23,19 @@ public class Receipt {
         double totalCost = 0;
 
         // fixed charges
-        totalCost += FIXED_CHARGE;
+        totalCost += fixedCharge;
 
         // taxi charges
         int totalKms = taxi.getTotalKms();
-        double peakTimeMultiple = taxi.isPeakTime() ? PEAK_TIME_MULTIPLIER : OFF_PEAK_MULTIPLIER;
+        double peakTimeMultiple = taxi.isPeakTime() ? peakTimeMultplier : peakMultiplier;
         if(taxi.isAirConditioned()) {
-            totalCost += Math.min(RATE_CHANGE_DISTANCE, totalKms) * PRE_RATE_CHANGE_AC_RATE * peakTimeMultiple;
-            totalCost += Math.max(0, totalKms - RATE_CHANGE_DISTANCE) * POST_RATE_CHANGE_AC_RATE * peakTimeMultiple;
+            totalCost += distanceMin * preRateChangeAc * peakTimeMultiple;
+            totalCost += distanceMax * postRateChangeAc * peakTimeMultiple;
         } else {
-            totalCost += Math.min(RATE_CHANGE_DISTANCE, totalKms) * PRE_RATE_CHANGE_NON_AC_RATE * peakTimeMultiple;
-            totalCost += Math.max(0, totalKms - RATE_CHANGE_DISTANCE) * POST_RATE_CHANGE_NON_AC_RATE * peakTimeMultiple;
+            totalCost += distanceMin * preRateChangeNonAc * peakTimeMultiple;
+            totalCost += distanceMax * postRateChangeNonAc * peakTimeMultiple;
         }
 
-        return totalCost * (1 + SALES_TAX_RATE);
+        return totalCost * (1 + taxRate);
     }
 }
